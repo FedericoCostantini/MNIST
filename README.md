@@ -3,6 +3,7 @@
 This is a personal project regarding neural network made to better understand the math and logic behind these systems
 
 Language used: python
+
 Libraries used:
 * tensorflow (to retrieve the MNIST data)
 * numpy
