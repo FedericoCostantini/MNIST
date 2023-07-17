@@ -191,8 +191,19 @@ class NeuralNetwork:
             self.h2 = np.zeros_like(self.h2)
         
         return (correct / self.test_images.shape[0]) * 100
+    
+    def activate(self, inp: np.ndarray):
+        inp = np.reshape(inp, (784, 1)).astype(np.float64)
+        _forward_propagation(inp, self.h1, self.h2, self.o, self.weightIH1, self.weightH1H2, self.weightH2O, self.biasH1, self.biasH2, self.biasO)
+        ans = self.get_ans()
+        
+        self.o = np.zeros_like(self.o)
+        self.h1 = np.zeros_like(self.h1)
+        self.h2 = np.zeros_like(self.h2)
+        
+        print("ARI guess it's a {0}".format(ans))
             
  
-
-nn = NeuralNetwork(100, 10000, 0.01, False, 32, 32, 10)
-nn.train()
+if __name__ == "__main__":
+    nn = NeuralNetwork(100, 10000, 0.01, False, 32, 32, 10)
+    nn.train()
