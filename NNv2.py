@@ -68,7 +68,7 @@ def _backward_propagation(inp: np.ndarray, h1: np.ndarray, h2: np.ndarray, o: np
     biasO -= dBO * lr   
 
 class NeuralNetwork:
-    def __init__(self, ep: int, batch: int, lr: float, toLoad: bool, num_h1: int, num_h2: int, num_o: int) -> None:
+    def __init__(self, toLoad: bool, ep: int = 100, batch: int = 10000, lr: float = 0.01, num_h1: int = 32, num_h2: int = 32, num_o: int = 10) -> None:
         np.random.seed(7)
         script_path = os.path.abspath(__file__)
         self.directory = os.path.dirname(script_path)
@@ -137,9 +137,11 @@ class NeuralNetwork:
                 labels = self.train_labels[indices]
             
             for i in range(self.batch):
-                _forward_propagation(imgs[index], self.h1, self.h2, self.o, self.weightIH1, self.weightH1H2, self.weightH2O, self.biasH1, self.biasH2, self.biasO)
+                inp : np.ndarray = np.copy(imgs[index])
+                inp[inp == 0] = 0.0001
+                _forward_propagation(inp, self.h1, self.h2, self.o, self.weightIH1, self.weightH1H2, self.weightH2O, self.biasH1, self.biasH2, self.biasO)
                 
-                _backward_propagation(imgs[index], self.h1, self.h2, self.o, convert(labels[index][0]), self.weightIH1, self.weightH1H2, self.weightH2O, self.biasH1, self.biasH2, self.biasO, self.lr)
+                _backward_propagation(inp, self.h1, self.h2, self.o, convert(labels[index][0]), self.weightIH1, self.weightH1H2, self.weightH2O, self.biasH1, self.biasH2, self.biasO, self.lr)
                 
                 self.o = np.zeros_like(self.o)
                 self.h1 = np.zeros_like(self.h1)
@@ -194,7 +196,9 @@ class NeuralNetwork:
     
     def activate(self, inp: np.ndarray):
         inp = np.reshape(inp, (784, 1)).astype(np.float64)
-        _forward_propagation(inp, self.h1, self.h2, self.o, self.weightIH1, self.weightH1H2, self.weightH2O, self.biasH1, self.biasH2, self.biasO)
+        mod_inp = np.copy(inp)
+        mod_inp[mod_inp == 0] = 0.0001
+        _forward_propagation(mod_inp, self.h1, self.h2, self.o, self.weightIH1, self.weightH1H2, self.weightH2O, self.biasH1, self.biasH2, self.biasO)
         ans = self.get_ans()
         
         self.o = np.zeros_like(self.o)
@@ -205,5 +209,5 @@ class NeuralNetwork:
             
  
 if __name__ == "__main__":
-    nn = NeuralNetwork(100, 10000, 0.01, False, 32, 32, 10)
+    nn = NeuralNetwork(False, 100, 10000, 0.01, 32, 32, 10)
     nn.train()

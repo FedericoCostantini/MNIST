@@ -24,9 +24,9 @@ class DigitVisualizer:
         self.surface = pg.display.get_surface()
         self.screen.fill(BLACK)
         try:
-            self.nn = NNv2.NeuralNetwork(100, 10000, 0.01, True, 32, 32, 10)
+            self.nn = NNv2.NeuralNetwork(True)
         except:
-            self.nn = NNv2.NeuralNetwork(100, 10000, 0.01, False, 32, 32, 10)
+            self.nn = NNv2.NeuralNetwork(False)
             self.nn.train()
         print("Current precision of the network: {0}".format(self.nn.evaluate()))
         
